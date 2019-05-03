@@ -1,0 +1,61 @@
+#build images
+   docker build -t <name> .
+
+#pull images
+    docker pull <image-name>
+
+#to check images
+    docker images
+
+#to run docker image in it mode
+    docker run -it <image-id>
+
+#to run docker image in dettach mode
+    docker run -d --name <custom-name> <image-id>
+
+#to check running containers
+    docker ps
+
+#to check container status
+    docker ps -a
+
+#postgres image setup for chatapp
+    docker run --name db -e POSTGRES_PASSWORD=postgres -d postgres
+    docker exec -it 9b56273bc582(container-id) bash
+    su postgres
+    \l
+    create database <name>;
+    \q
+
+#chatapp image setup for chatapp
+    docker run --name chatapp --link db:db -d -p 8000:8000 chatapp(image-name)
+#nginx image setup for chatapp
+    docker run --link=chatapp --name manjunath -d -p 80:80 nginx:latest
+    docker exec -it 28e2eb246458(container-id) bash
+    cd /etc/ngnix/conf.d
+    rm -rf default.conf (remove default.conf file)
+    vim chatapp
+    press i
+    ----------
+    paste it
+    ----------
+    upstream chatapp{
+        ip_hash;
+        server chatapp:8000;
+        }
+    server {
+      listen 80;
+      server_name localhost;
+      location / {
+          proxy_pass http://chatapp/;
+        }
+      location Chat_App {
+        root /usr/src/chatapp/static/Chat_App;
+          }
+      }
+
+# to delete all docker images at once
+   docker rmi -f $(docker images -q)
+
+# to delete all docker suspended containers at once
+  docker rm $(docker ps -a -q)

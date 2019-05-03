@@ -1,0 +1,9 @@
+#for login into aws account
+   -install AWS CLI and configure it
+   eval $(aws ecr get-login --no-include-email | sed 's|https://||')
+
+#to provide tags to images
+    docker tag <img-id> 218322401723.dkr.ecr.ap-south-1.amazonaws.com/kuberenets(aws ecr-repo url):chatapp<name>
+
+#to push docker-imgs to ecr repo
+    docker push 218322401723.dkr.ecr.ap-south-1.amazonaws.com/kuberenets:chatapp
